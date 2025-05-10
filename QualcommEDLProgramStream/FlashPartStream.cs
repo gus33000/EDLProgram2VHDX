@@ -1,4 +1,4 @@
-﻿namespace SplitEDLCombiner
+﻿namespace QualcommEDLProgramStream
 {
     internal class FlashPartStream : Stream
     {
@@ -135,6 +135,15 @@
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();
+        }
+
+        ~FlashPartStream()
+        {
+            // Cleanup
+            foreach (FlashPart flashingPartition in flashParts)
+            {
+                flashingPartition.Data.Close();
+            }
         }
     }
 }

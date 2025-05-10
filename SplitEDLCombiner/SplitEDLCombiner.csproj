@@ -21,5 +21,9 @@
     <PackageReference Include="LTRData.DiscUtils.Wim" Version="1.0.54" />
     <PackageReference Include="LTRData.DiscUtils.Xva" Version="1.0.54" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\QualcommEDLProgramStream\QualcommEDLProgramStream.csproj" />
+  </ItemGroup>
 
 </Project>

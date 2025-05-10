@@ -18,11 +18,11 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using SplitEDLCombiner.Helpers;
+using QualcommEDLProgramStream.Helpers;
 using System.Collections.Concurrent;
 using System.Numerics;
 
-namespace SplitEDLCombiner.GPT
+namespace QualcommEDLProgramStream.GPT
 {
     public partial class GPT
     {

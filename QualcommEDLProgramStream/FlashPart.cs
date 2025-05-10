@@ -1,4 +1,4 @@
-﻿namespace SplitEDLCombiner
+﻿namespace QualcommEDLProgramStream
 {
     internal class FlashPart
     {

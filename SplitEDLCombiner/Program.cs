@@ -1,7 +1,7 @@
 ﻿using DiscUtils;
 using DiscUtils.Containers;
 using DiscUtils.Streams;
-using SplitEDLCombiner.XML;
+using QualcommEDLProgramStream;
 
 namespace SplitEDLCombiner
 {
@@ -9,88 +9,37 @@ namespace SplitEDLCombiner
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"Input XML Programming File: {args[0]}");
-            Console.WriteLine($"Output VHDX Disk File: {args[1]}");
-            Console.WriteLine($"Sector Size: {args[2]}");
+            string inputXmlStr = args[0];
+            string outputVHDXStr = args[1];
+            string sectorSizeStr = args[2];
 
-            if (!File.Exists(args[0]))
+            Console.WriteLine($"Input XML Programming File: {inputXmlStr}");
+            Console.WriteLine($"Output VHDX Disk File: {outputVHDXStr}");
+            Console.WriteLine($"Sector Size: {sectorSizeStr}");
+
+            if (!File.Exists(inputXmlStr))
             {
                 Console.WriteLine("ERROR: XML Does not exist");
                 return;
             }
 
-            if (File.Exists(args[1]))
+            if (File.Exists(outputVHDXStr))
             {
                 Console.WriteLine("ERROR: VHDX Already exists");
                 return;
             }
 
-            uint sectorSize = uint.Parse(args[2]);
+            uint sectorSize = uint.Parse(sectorSizeStr);
 
-            Data data = XmlReader.DeserializeDataXmlFile(args[0]);
+            Stream? flashPartStream = ParseProgramXML.GetStream(inputXmlStr, sectorSize);
 
-            foreach (XML.Program program in data.Program)
+            if (flashPartStream == null)
             {
-                if (program.Label == "PrimaryGPT")
-                {
-                    GPT.GPT gpt = new(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(args[0])!, program.Filename)), sectorSize);
-                    ulong diskSize = (gpt.LastUsableSector + 1) * sectorSize;
-
-                    Console.WriteLine($"Disk size: {diskSize}");
-
-                    List<FlashPart> flashingPartitions = [];
-
-                    foreach (XML.Program dataProgram in data.Program)
-                    {
-                        if (string.IsNullOrEmpty(dataProgram.Filename))
-                        {
-                            continue;
-                        }
-
-                        string startSector = dataProgram.Start_sector;
-                        startSector = startSector.Replace("NUM_DISK_SECTORS", (gpt.LastUsableSector + 1).ToString());
-                        startSector = startSector.Trim('.');
-
-                        Console.WriteLine($"STR: {startSector}");
-
-                        ulong startSectorLong = 0;
-
-                        if (startSector.EndsWith("-5"))
-                        {
-                            string newStr = startSector[..^2];
-                            startSectorLong = ulong.Parse(newStr) - 5;
-                        }
-                        else
-                        {
-                            startSectorLong = ulong.Parse(startSector);
-                        }
-
-                        Console.WriteLine($"UL: {startSectorLong}");
-
-                        FlashPart flashPart = new()
-                        {
-                            LocationOnDisk = startSectorLong * sectorSize,
-                            Data = File.OpenRead(Path.Combine(Path.GetDirectoryName(args[0])!, dataProgram.Filename))
-                        };
-
-                        flashingPartitions.Add(flashPart);
-                    }
-
-                    Console.WriteLine($"FlashPart counts: {flashingPartitions.Count}");
-
-                    FlashPartStream flashPartStream = new(diskSize, flashingPartitions);
-
-                    ConvertDD2VHD(flashPartStream, args[1], sectorSize);
-
-                    // Cleanup
-                    foreach (FlashPart flashingPartition in flashingPartitions)
-                    {
-                        flashingPartition.Data.Close();
-                    }
-
-                    break;
-                }
+                Console.WriteLine("ERROR: Could not build stream out of XML file");
+                return;
             }
+
+            ConvertDD2VHD(flashPartStream, outputVHDXStr, sectorSize);
 
             Console.WriteLine("The end.");
         }

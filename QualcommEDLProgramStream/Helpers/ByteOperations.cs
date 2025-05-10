@@ -20,7 +20,7 @@
 
 // These functions assume same endianness for the CPU architecture and the raw data it reads from or writes to.
 
-namespace SplitEDLCombiner.Helpers
+namespace QualcommEDLProgramStream.Helpers
 {
     internal static class ByteOperations
     {
@@ -213,7 +213,7 @@ namespace SplitEDLCombiner.Helpers
                 uint crc = (uint)((uint)0 ^ -1);
                 for (uint i = Offset; i < Offset + Length; i++)
                 {
-                    crc = (crc >> 8) ^ CRC32Table[(crc ^ Input[i]) & 0xFF];
+                    crc = crc >> 8 ^ CRC32Table[(crc ^ Input[i]) & 0xFF];
                 }
                 crc = (uint)(crc ^ -1);
 

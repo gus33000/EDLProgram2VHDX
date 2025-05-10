@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace SplitEDLCombiner.XML
+namespace QualcommEDLProgramStream.XML
 {
     [XmlRoot(ElementName = "program")]
     public class Program

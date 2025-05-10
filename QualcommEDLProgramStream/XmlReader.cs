@@ -1,7 +1,7 @@
-﻿using SplitEDLCombiner.XML;
+﻿using QualcommEDLProgramStream.XML;
 using System.Xml.Serialization;
 
-namespace SplitEDLCombiner
+namespace QualcommEDLProgramStream
 {
     internal static class XmlReader
     {
