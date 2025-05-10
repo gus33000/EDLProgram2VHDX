@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SplitEDLCombiner": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\gus33\\Downloads\\38833FF26BA1D.UnigramPreview_g9c9v27vpyspw!App\\835-ev1\\Partitions\\rawprogram0.xml\" \"C:\\Users\\gus33\\Downloads\\38833FF26BA1D.UnigramPreview_g9c9v27vpyspw!App\\835-ev1\\Partitions\\LUN0.vhdx\" 4096"
+    }
+  }
+}
